@@ -5,7 +5,6 @@ dotenv.config({ path: './config.env' }); // here will pass an object to env so i
 
 const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
 
-
 const connectDB = async () => {
     try {
         await mongoose.connect(DB, {

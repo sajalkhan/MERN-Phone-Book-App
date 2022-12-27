@@ -1,22 +1,57 @@
-version: '3.8'
+version: "3"
 services:
-    web:
-      build: ./frontend
-      container_name: frontend
-      ports:
-        - 3000:3000
-    api:
-      build: ./backend
-      container_name: backend
-      ports:
-        - 3001:3001
-    db:
-      build: ./backend/config
-      container_name: database
-      tty: true
-      volumes:
-          - ./backend/config:/data/db
-      ports:
-          - 27017:27017
-      restart: on-failure
-      
+
+  client:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - mern-network
+    volumes:
+      - /client/node_modules
+      - ./client/src:/usr/src
+      # - ./client/public:/usr/app/public
+    depends_on:
+      - server
+    environment:
+      - SERVER=http://localhost:8080
+      - CHOKIDAR_USEPOLLING=true
+    command: npm start
+    stdin_open: true
+    tty: true
+  
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    networks:
+      - mern-network
+    volumes:
+      - ./server/src:/usr/app/src
+    depends_on:
+      - db
+    environment:
+      - MONGO_URL=mongodb://db:27017
+      - CLIENT=http://localhost:3000
+      - SUPPRESS_NO_CONFIG_WARNING=true
+
+  db:
+    image: mongo:3.6.19-xenial
+    ports:
+      - 27017:27017
+    networks:
+      - mern-network
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  mern-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local

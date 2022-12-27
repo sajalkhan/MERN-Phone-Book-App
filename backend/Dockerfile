@@ -1,7 +1,12 @@
-FROM node:14-alpine3.14
-WORKDIR /app
-COPY package.*json ./ 
-RUN npm install
+# Pull Docker Hub base image
+FROM node:14.16.0-alpine3.10
+# Set working directory
+WORKDIR /usr/app
+# Install app dependencies
+COPY package*.json ./
+RUN npm install -qyg nodemon@^2.0.4
+RUN npm install -qy
+# Copy app to container
 COPY . .
-EXPOSE 3001
-CMD  ["npm", "start"]
+# Run the "dev" script in package.json
+CMD ["npm", "run", "start"]
