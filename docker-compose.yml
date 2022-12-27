@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+    web:
+      build: ./frontend
+      container_name: frontend
+      ports:
+        - 3000:3000
+    api:
+      build: ./backend
+      container_name: backend
+      ports:
+        - 3001:3001
+    db:
+      build: ./backend/config
+      container_name: database
+      tty: true
+      volumes:
+          - ./backend/config:/data/db
+      ports:
+          - 27017:27017
+      restart: on-failure
+      
