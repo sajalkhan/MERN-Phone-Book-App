@@ -28,16 +28,16 @@ jobs:
       - run: npm i
       - run: npm run build
 
-      - name: Node Setup backend
-        uses: |
-          cd backend
-          actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: "npm"
+      # - name: Node Setup backend
+      #   uses: |
+      #     cd backend
+      #     actions/setup-node@v2
+      #   with:
+      #     node-version: 16.x
+      #     cache: "npm"
           
-      - run: npm i
-      - run: npm run build
+      # - run: npm i
+      # - run: npm run build
 
   check_merge_conflict:
     runs-on: ubuntu-latest
