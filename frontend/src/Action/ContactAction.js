@@ -157,7 +157,7 @@ export const DeleteContact = (id) => async (dispatch) => {
     const body = JSON.stringify({ id });
 
     try {
-        const res = await axios.post('/api/contact/DeleteContact', body, config);
+        // const res = await axios.post('/api/contact/DeleteContact', body, config);
         
         dispatch({
             type: DELETE_CONTACT,
