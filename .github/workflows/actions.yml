@@ -9,7 +9,8 @@ on:
       - 'coverage/**'
       - 'dist/**'
       - 'docs/**'
-      - 'package-lock.json'
+      - '*.json'
+      - '*.lock'
 
 jobs:
   # check build is successful
