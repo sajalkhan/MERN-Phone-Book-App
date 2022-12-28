@@ -18,26 +18,24 @@ jobs:
       - name: Checkout from (master)
         uses: actions/checkout@v2
       - name: Node Setup frontend
-        uses: |
-          cd frontend
-          actions/setup-node@v2
+        uses: actions/setup-node@v2
         with:
           node-version: 16.x
-          cache: "npm"
+          cache: 'npm'
+          cache-dependency-path: '../../frontend/package-lock.json'
 
       - run: npm i
       - run: npm run build
 
-      # - name: Node Setup backend
-      #   uses: |
-      #     cd backend
-      #     actions/setup-node@v2
-      #   with:
-      #     node-version: 16.x
-      #     cache: "npm"
+      - name: Node Setup backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: 'npm'
+          cache-dependency-path: '../../backend/'
           
-      # - run: npm i
-      # - run: npm run build
+      - run: npm i
+      - run: npm run build
 
   check_merge_conflict:
     runs-on: ubuntu-latest
