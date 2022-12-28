@@ -9,8 +9,6 @@ on:
       - 'coverage/**'
       - 'dist/**'
       - 'docs/**'
-      - '*.json'
-      - '*.lock'
 
 jobs:
   # check build is successful
@@ -19,20 +17,28 @@ jobs:
     steps:
       - name: Checkout from (master)
         uses: actions/checkout@v2
-      - name: Node Setup
-        uses: actions/setup-node@v2
+      - name: Node Setup frontend
+        uses: |
+          cd frontend
+          actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: "npm"
+
+      - run: npm i
+      - run: npm run build
+
+      - name: Node Setup backend
+        uses: |
+          cd ..
+          cd backend
+          actions/setup-node@v2
         with:
           node-version: 16.x
           cache: "npm"
           
-      - run: |
-          cd backend
-          npm i
-          npm run build
-          cd ..
-          cd frontend
-          npm i
-          npm run build
+      - run: npm i
+      - run: npm run build
 
   check_merge_conflict:
     runs-on: ubuntu-latest
