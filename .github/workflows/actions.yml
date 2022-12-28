@@ -9,31 +9,29 @@ on:
       - 'coverage/**'
       - 'dist/**'
       - 'docs/**'
+      - 'package-lock.json'
 
 jobs:
   # check build is successful
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout from (master)
         uses: actions/checkout@v2
-
-      - name: Setup Node.js
+      - name: Node Setup
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: 16.x
           cache: "npm"
-      
-      - name: 'Npm install and build'
-          run: |
-            cd backend
-            npm install
-            npm run build
-            cd ..
-            cd frontend
-            npm install
-            npm run build
+          
+      - run: |
+          cd backend
+          npm i
+          npm run build
+          cd ..
+          cd frontend
+          npm i
+          npm run build
 
   check_merge_conflict:
     runs-on: ubuntu-latest
