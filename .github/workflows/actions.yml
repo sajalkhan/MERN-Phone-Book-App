@@ -32,12 +32,3 @@ jobs:
         run: |
           npm i
         working-directory: backend
-
-  check_merge_conflict:
-    runs-on: ubuntu-latest
-    name: Find merge conflicts
-    steps:
-      - name: Checkout from (master)
-        uses: actions/checkout@v2
-      - name: Merge Conflict finder
-        uses: olivernybroe/action-conflict-finder@v4.0
