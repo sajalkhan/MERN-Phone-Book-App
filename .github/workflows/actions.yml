@@ -12,7 +12,7 @@ on:
 
 jobs:
   # check build is successful
-  build:
+  build-frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout from (master)
@@ -22,7 +22,12 @@ jobs:
           npm i
           npm run build
         working-directory: frontend
-      
+
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout from (master)
+        uses: actions/checkout@v2
       - name: Node Setup backend
         run: |
           npm i
