@@ -31,7 +31,7 @@ jobs:
       - name: Node Setup backend
         run: |
           npm i
-          npm run build
+          npm run start
         working-directory: backend
 
   check_merge_conflict:
