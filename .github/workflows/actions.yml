@@ -22,6 +22,12 @@ jobs:
           npm i
           npm run build
         working-directory: frontend
+      
+      - name: Node Setup backend
+        run: |
+          npm i
+          npm run build
+        working-directory: backend
 
   check_merge_conflict:
     runs-on: ubuntu-latest
