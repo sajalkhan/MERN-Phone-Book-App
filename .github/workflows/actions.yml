@@ -21,7 +21,7 @@ jobs:
         run: |
           npm i
           npm run build
-        working-directory: ../../frontend
+        working-directory: frontend
 
   check_merge_conflict:
     runs-on: ubuntu-latest
