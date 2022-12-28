@@ -81,8 +81,8 @@ const App = ({ GetAllContact, UpdateContact, contacts, DeleteContact, AddNewCont
             <Table celled color='violet' inverted selectable textAlign="center">
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Name 1</Table.HeaderCell>
-                  <Table.HeaderCell>phone Number 1</Table.HeaderCell>
+                  <Table.HeaderCell>Name</Table.HeaderCell>
+                  <Table.HeaderCell>phone Number</Table.HeaderCell>
                   <Table.HeaderCell>Actions</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
