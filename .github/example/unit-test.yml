@@ -1,0 +1,23 @@
+name: AEON CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test_unit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Node setup
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.15.1
+          cache: 'yarn'
+      - name: Install Dependencies
+        run: |
+          yarn install
+      - name: Unit Test
+        run: |
+          yarn test:unit

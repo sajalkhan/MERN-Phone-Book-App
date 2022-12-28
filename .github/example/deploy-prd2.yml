@@ -1,0 +1,56 @@
+
+name: deploy-main
+
+on:
+  push:
+    branches:
+      - main
+  repository_dispatch:
+    types: [update_post]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Node setup
+        uses: actions/setup-node@master
+        with:
+          node-versions: 16.15.1
+      - name: Get Yarn Cache Directory Path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache Node Modules
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-${{ env.project-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.project-name }}-
+      - name: yarn install
+        run: yarn
+      - name: build
+        run: yarn build
+      - name: Deploy
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PRD_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PRD_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      - name: S3 sync
+        run: aws s3 sync out s3://prd-corporate-uzabase-com --delete
+      - name: Purge cache
+        uses: jdmevo123/akamai-purge-action@1.7
+        env:
+          EDGERC: ${{ secrets.AKAMAI_EDGERC }}
+        with:
+          command: 'invalidate'
+          type: 'url' #valid inputs are 'cpcode', 'url' and 'tag'
+          ref: 'https://www.uzabase.com/' #input url's as 'https://www.example.com/ https://www.example1.com/'
+          network: 'production'

@@ -1,0 +1,49 @@
+name: deploy-dev
+
+on:
+  push:
+    branches:
+      - dev
+  repository_dispatch:
+    types: [update_post]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Node setup
+        uses: actions/setup-node@master
+        with:
+          node-versions: 16.15.1
+      - name: Get Yarn Cache Directory Path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache Node Modules
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-${{ env.project-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.project-name }}-
+      - run: yarn
+      - run: yarn build
+      - name: Translate Secrets of base64 into json
+        env:
+          JSON_DECODE: ${{ secrets.DEV_GCP_CREDENTIALS }}
+        run: |
+          echo $JSON_DECODE | base64 --decode > ./config/credentials.json
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
+      - name: 'Gcloud auth'
+        run: gcloud auth activate-service-account --key-file ./config/credentials.json
+      - name: 'GCP Clear cache settings'
+        run: gsutil -m setmeta -r -h "Cache-Control:no-store, max-age=1800" gs://dev-corporate-uzabase-com/*
+      - name: 'Deploy to GCP'
+        run: gsutil -m rsync -r -d ./out/ gs://dev-corporate-uzabase-com/

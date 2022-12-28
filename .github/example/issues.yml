@@ -1,0 +1,14 @@
+name: 'Add PR to 4DVN PR'
+on: pull_request
+jobs:
+  githubActionsAutomateProjects:
+    name: Add PR to 4DVN PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add PR to 4DVN PR
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: docker://takanabe/github-actions-automate-projects:v0.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PROJECT_URL: https://github.com/fourdigit/ichigaya-components/projects/4
+          GITHUB_PROJECT_COLUMN_NAME: In progress

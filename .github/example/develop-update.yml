@@ -1,0 +1,37 @@
+name: develop update
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Node setup
+        uses: actions/setup-node@master
+        with:
+          node-version: 14.15.1
+      - name: Cache Node Modules
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Packages
+        run: yarn
+      - name: Build Artifacts
+        run: yarn build:pages:dev
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEVDEV_SERVER_SSH_KEY }}
+          ARGS: '-rltgoDzvO --delete --exclude=.htaccess'
+          SOURCE: 'dist/'
+          REMOTE_HOST: ${{ secrets.DEV_REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.DEVDEV_REMOTE_USER }}
+          TARGET: ${{ secrets.DEVDEV_REMOTE_PATH }}
+          EXCLUDE: '/dist/, /node_modules/'

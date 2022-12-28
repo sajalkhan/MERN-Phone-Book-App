@@ -1,0 +1,39 @@
+name: deploy develop
+
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Node setup
+        uses: actions/setup-node@master
+        with:
+          node-version: 14.15.1
+      - name: Get Yarn Cache Directory Path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache Node Modules
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-${{ env.project-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.project-name }}-
+      - run: yarn
+      - run: yarn build:dev
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEV_SERVER_SSH_KEY }}
+          ARGS: '-rltgoDzvO --delete --exclude=.htaccess'
+          SOURCE: 'dist/'
+          REMOTE_HOST: ${{ secrets.DEV_REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.DEV_REMOTE_USER }}
+          TARGET: ${{ secrets.DEV_REMOTE_PATH }}
+          EXCLUDE: '/dist/, /node_modules/'
