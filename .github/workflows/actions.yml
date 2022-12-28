@@ -30,7 +30,6 @@ jobs:
 
       - name: Node Setup backend
         uses: |
-          cd ..
           cd backend
           actions/setup-node@v2
         with:
