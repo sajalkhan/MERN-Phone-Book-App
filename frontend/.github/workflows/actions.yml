@@ -1,0 +1,36 @@
+name: Integration
+
+on:
+  push:
+    branches:
+      - master
+      - "feat/*"
+    paths-ignore: 
+      - 'coverage/**'
+      - 'dist/**'
+      - 'docs/**'
+      - 'package-lock.json'
+
+jobs:
+  # check build is successful
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout from (master)
+        uses: actions/checkout@v2
+      - name: Node Setup
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: "npm"
+      - run: npm i
+      - run: npm run build
+
+  check_merge_conflict:
+    runs-on: ubuntu-latest
+    name: Find merge conflicts
+    steps:
+      - name: Checkout from (master)
+        uses: actions/checkout@v2
+      - name: Merge Conflict finder
+        uses: olivernybroe/action-conflict-finder@v4.0
