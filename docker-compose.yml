@@ -1,7 +1,7 @@
 version: "3"
 services:
 
-  client:
+  frontend:
     build: 
       context: ./frontend
       dockerfile: Dockerfile
@@ -10,34 +10,34 @@ services:
     networks:
       - mern-network
     volumes:
-      - /client/node_modules
-      # - ./client/src:/app/src
-      # - ./client/public:/app/public
+      - /frontend/node_modules
+      - ./frontend/src:/usr/app/src
+      - ./frontend/public:/usr/app/public
     depends_on:
-      - server
+      - backend
     environment:
-      - SERVER=http://localhost:8080
+      - BACKEND=http://localhost:8080
       - CHOKIDAR_USEPOLLING=true
     command: npm start
     stdin_open: true
     tty: true
   
-  server:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - 5000:5000
+      - 8080:8080
     networks:
       - mern-network
     volumes:
-      - ./server/src:/usr/app/src
+      - ./backend/src:/usr/app/src
     depends_on:
       - db
     environment:
       - MONGO_URL=mongodb://db:27017
-      - CLIENT=http://localhost:3000
-      - SUPPRESS_NO_CONFIG_WARNING=true
+      - FRONTEND=http://localhost:3000
+      - SUPPRESS_NO_CONFIG_WARNING = true
 
   db:
     image: mongo:3.6.19-xenial
