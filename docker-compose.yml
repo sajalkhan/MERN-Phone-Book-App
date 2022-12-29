@@ -45,6 +45,8 @@ services:
       - 27017:27017
     networks:
       - mern-network
+    volumes:
+      - mongo-data:/data/db
 
 networks:
   mern-network:
