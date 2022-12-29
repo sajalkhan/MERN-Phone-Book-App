@@ -10,6 +10,11 @@ on:
       - 'dist/**'
       - 'docs/**'
 
+  pull_request:
+    branches:
+      - master
+      - 'feat/*'
+
 jobs:
   # check build is successful
   build-frontend:
