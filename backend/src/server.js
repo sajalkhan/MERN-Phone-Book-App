@@ -4,7 +4,7 @@ const path = require('path');
 const cors = require('cors');
 const config = require('config');
 
-const connectDB = require('./Config/db')
+const connectDB = require('./Config/db');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));

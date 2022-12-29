@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": " nodemon server.js",
+    "start": "nodemon -L ./src/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend",
-    "backend": "nodemon server.js",
+    "backend": "nodemon -L ./src/server.js",
     "frontend": "npm start --prefix frontend"
   },
   "author": "sajal",
