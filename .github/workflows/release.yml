@@ -15,10 +15,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Docker login
         env:
-          DOCKER_USER: ${{secrets.DOCKERHUB_USERNAME}}
-          DOCKER_PASSWORD: ${{secrets.DOCKERHUB_PASSWORD}}
+          NAME: ${{secrets.DOCKERHUB_USERNAME}}
+          PASSWORD: ${{secrets.DOCKERHUB_PASSWORD}}
         run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker login -u $NAME -p $PASSWORD
       - name: Build the docker-image
         run: docker-compose -f docker-compose-dev.yml up -d
       
