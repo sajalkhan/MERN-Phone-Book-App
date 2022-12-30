@@ -10,15 +10,19 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        name: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
     steps:
       - name: Checkout from (master)
         uses: actions/checkout@v2
       - name: Docker login
-        env:
-          NAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        # env:
+        #   NAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        #   PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
-          docker login -u $NAME -p $PASSWORD
+          docker login -u ${{matrix.name}} -p ${{matrix.password}}
       
       - name: Docker push
         run: docker-compose push
