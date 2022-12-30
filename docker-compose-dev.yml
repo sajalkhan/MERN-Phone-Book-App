@@ -2,6 +2,7 @@ version: "3"
 services:
 
   frontend:
+    image: sajalkhan/mern_contact_manager:frontend
     build: 
       context: ./frontend
       dockerfile: Dockerfile
@@ -23,6 +24,7 @@ services:
     tty: true
   
   backend:
+    image: sajalkhan/mern_contact_manager:backend
     build:
       context: ./backend
       dockerfile: Dockerfile
