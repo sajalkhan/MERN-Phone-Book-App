@@ -15,8 +15,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Docker login
         env:
-          NAME: ${{secrets.DOCKERHUB_USERNAME}}
-          PASSWORD: ${{secrets.DOCKERHUB_PASSWORD}}
+          NAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
           docker login -u $NAME -p $PASSWORD
       
