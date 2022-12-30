@@ -12,8 +12,6 @@ services:
       - mern-network
     volumes:
       - /frontend/node_modules
-      - ./frontend/src:/usr/app/src
-      - ./frontend/public:/usr/app/public
     depends_on:
       - backend
     environment:
